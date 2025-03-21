@@ -1,7 +1,6 @@
 import time
 import logging
 import requests
-from app.config import Config
 from app.utils.errors import UnauthorizedError, ServiceUnavailableError
 
 class OAuthManager:
@@ -10,7 +9,7 @@ class OAuthManager:
     Stores the current access token in memory for simplicity.
     """
 
-    HUBSPOT_TOKEN_URL = Config.HUBSPOT_TOKEN_URL
+    HUBSPOT_TOKEN_URL="https://api.hubapi.com/oauth/v1/token"
 
     def __init__(self, client_id, client_secret, refresh_token):
         self.client_id = client_id

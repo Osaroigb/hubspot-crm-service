@@ -57,7 +57,7 @@ This **HubSpot CRM Service** provides a **Flask**-based integration with HubSpot
 
 1. **Clone the Repository**:
    ```bash
-   git clone https://github.com/your-username/hubspot-crm-service.git
+   git clone https://github.com/Osaroigb/hubspot-crm-service.git
    cd hubspot-crm-service
    ```
 
@@ -92,7 +92,6 @@ All environment variables are defined in **`.env.example`**. Copy them into **`.
 - **`APP_PORT`**: The Flask port (e.g. `8080`)  
 - **`APP_NAME`**: A name for the application  
 - **`APP_ENV`**: The environment (e.g. `development`, `production`)  
-- **`JWT_SECRET_KEY`**: Secret key for JWT if used  
 - **`HUBSPOT_CLIENT_ID`**: Your HubSpot OAuth client ID  
 - **`HUBSPOT_CLIENT_SECRET`**: Your HubSpot OAuth client secret  
 - **`HUBSPOT_REFRESH_TOKEN`**: Your HubSpot OAuth refresh token  
@@ -114,14 +113,14 @@ docker-compose up --build
 This will:
 1. Build the **Flask** image from the **`Dockerfile`**.
 2. Start a container named **`hubspot_crm_api`** (or whichever name you specified in `docker-compose.yml`).
-3. Expose port **8080** (by default), so the API is accessible at `http://localhost:8080`.
+3. Expose port **8080** (by default), so the API is accessible at `http://localhost:8080api/v1`.
 
 ### 2. Verify
 
 Once the container logs show “Running on 0.0.0.0:8080”, open another terminal or Postman to **test**:
 
 ```bash
-curl http://localhost:8080/api/v1/hubspot/contact
+curl http://localhost:8080/api/v1
 ```
 (Or your other endpoints below.)
 
@@ -146,12 +145,13 @@ If you prefer **not** to use Docker:
    ```
 4. The API will be available at:
    ```
-   http://127.0.0.1:8080/api/v1/hubspot
+   http://127.0.0.1:8080/api/v1
    ```
 
 ---
 
 ## API Endpoints & Usage
+📌 Postman API Docs[https://documenter.getpostman.com/view/14515325/2sAYkGMKoE]
 
 Below is a **high-level** overview of the main endpoints. Full reference is in the code or docstrings.
 
@@ -167,7 +167,7 @@ Below is a **high-level** overview of the main endpoints. Full reference is in t
     "firstname": "John",
     "lastname": "Doe",
     "phone": "+1234567890",
-    "custom_field": "any extra data"
+    "extra_field": "any extra data"
   }
   ```
   **Responses**:
