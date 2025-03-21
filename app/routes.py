@@ -1,11 +1,24 @@
 from . import app
+from flask import request
 from .config import logging
+from .utils.rate_limiting import RateLimiter
 from .utils.api_responses import build_error_response, build_success_response
 from .utils.errors import UnprocessableEntityError, NotFoundError, OperationForbiddenError
 
 
 # Global API prefix
 API_PREFIX = "/api/v1"
+
+rate_limiter = RateLimiter()
+
+@app.before_request
+def check_rate_limiting():
+    ip = request.remote_addr
+
+    if rate_limiter.is_rate_limited(ip):
+        logging.error("Rate limit exceeded")
+        return build_error_response(message="Rate limit exceeded", status=429)
+    
 
 @app.route("/favicon.ico")
 def favicon():
@@ -22,6 +35,7 @@ def home():
 # Error handler for undefined routes
 @app.errorhandler(404)
 def not_found(error):
+    logging.error("Route not found")
     return build_error_response(message="Route not found", status=404)
 
 
