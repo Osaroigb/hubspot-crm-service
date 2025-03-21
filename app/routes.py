@@ -1,5 +1,6 @@
 from . import app
-from flask import jsonify
+from .utils.api_responses import build_error_response, build_success_response
+
 
 # Global API prefix
 API_PREFIX = "/api/v1"
@@ -13,20 +14,10 @@ def favicon():
 # Define the home route
 @app.route(API_PREFIX, methods=['GET'])
 def home():
-     return jsonify({
-        'success': True,
-        'message': "Welcome to hubspot-crm-service",
-        'status_code': 200,
-        'data': {}
-    }), 200
+    return build_success_response(message="Welcome to hubspot-crm-service")
 
 
 # Error handler for undefined routes
 @app.errorhandler(404)
 def not_found(error):
-    return jsonify({
-        'success': False,
-        'message': "Route not found",
-        'status_code': 404,
-        'data': {}
-    }), 404
+    return build_error_response(message="Route not found", status=404)
