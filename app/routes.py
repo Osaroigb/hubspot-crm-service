@@ -1,9 +1,10 @@
 from . import app
 from flask import request
 from .config import logging
+from .utils.errors import BaseError
 from .utils.rate_limiting import RateLimiter
+from app.controllers.hubspot_controller import hubspot_bp
 from .utils.api_responses import build_error_response, build_success_response
-from .utils.errors import UnprocessableEntityError, NotFoundError, OperationForbiddenError
 
 
 # Global API prefix
@@ -32,6 +33,10 @@ def home():
     return build_success_response(message="Welcome to hubspot-crm-service")
 
 
+# Register the HubSpot routes
+app.register_blueprint(hubspot_bp, url_prefix=API_PREFIX + "/hubspot")
+
+
 # Error handler for undefined routes
 @app.errorhandler(404)
 def not_found(error):
@@ -41,29 +46,24 @@ def not_found(error):
 
 @app.errorhandler(Exception)
 def handle_exception(error):
-    # Log the error for debugging purposes
-    logging.error(f"Unhandled exception: {error}")
-    
-    # Check the type of error and customize the response
-    if isinstance(error, UnprocessableEntityError):
-        response = {"error": error.message, "details": error.verboseMessage}
-        http_code = error.httpCode
+    """
+    Global error handler that checks if the error is a custom BaseError
+    and uses its properties. Otherwise, returns a generic 500.
+    """
+    # Log the error for debugging
+    logging.error(f"Unhandled exception: {error}", exc_info=True)
 
-    elif isinstance(error, NotFoundError):
-        response = {"error": error.message, "details": error.verboseMessage}
-        http_code = error.httpCode
-
-    elif isinstance(error, OperationForbiddenError):
-        response = {"error": error.message, "details": error.verboseMessage}
-        http_code = error.httpCode
-
+    if isinstance(error, BaseError):
+        # A custom error we explicitly raised
+        return build_error_response(
+            message=error.message, 
+            status=error.httpCode, 
+            data=error.verboseMessage
+        )
     else:
-        # Default error response if error type is not specifically handled
-        response = {"error": "Internal Server Error", "details": "An unexpected error occurred"}
-        http_code = 500
-    
-    return build_error_response(
-        message=response["error"],
-        status=http_code,
-        data=response["details"]
-    )
+        # Default fallback for any other exceptions
+        return build_error_response(
+            message="Internal Server Error",
+            status=500,
+            data=str(error)
+        )
