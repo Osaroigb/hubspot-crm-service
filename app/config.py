@@ -11,6 +11,10 @@ APP_PORT_VAR = "APP_PORT"
 APP_HOST_VAR = "APP_HOST"
 APP_NAME_VAR = "APP_NAME"
 APP_ENV_VAR = "APP_ENV"
+HUBSPOT_TOKEN_URL_VAR = "HUBSPOT_TOKEN_URL"
+HUBSPOT_CLIENT_ID_VAR = "HUBSPOT_CLIENT_ID"
+HUBSPOT_CLIENT_SECRET_VAR = "HUBSPOT_CLIENT_SECRET"
+HUBSPOT_REFRESH_TOKEN_VAR = "HUBSPOT_REFRESH_TOKEN"
 
 # Configuration class
 class Config:
@@ -18,6 +22,10 @@ class Config:
     APP_HOST: str = os.getenv(APP_HOST_VAR)
     APP_NAME: str = os.getenv(APP_NAME_VAR)
     APP_ENV: str = os.getenv(APP_ENV_VAR)
+    HUBSPOT_TOKEN_URL: str = os.getenv(HUBSPOT_TOKEN_URL_VAR)
+    HUBSPOT_CLIENT_ID: str = os.getenv(HUBSPOT_CLIENT_ID_VAR)
+    HUBSPOT_CLIENT_SECRET: str = os.getenv(HUBSPOT_CLIENT_SECRET_VAR)
+    HUBSPOT_REFRESH_TOKEN: str = os.getenv(HUBSPOT_REFRESH_TOKEN_VAR)
 
     @classmethod
     def validate_env(cls):
@@ -25,7 +33,11 @@ class Config:
             APP_NAME_VAR,
             APP_ENV_VAR,
             APP_PORT_VAR,
-            APP_HOST_VAR
+            APP_HOST_VAR,
+            HUBSPOT_TOKEN_URL_VAR,
+            HUBSPOT_CLIENT_ID_VAR,
+            HUBSPOT_CLIENT_SECRET_VAR,
+            HUBSPOT_REFRESH_TOKEN_VAR
         ]
 
         missing_vars = [var for var in required_vars if not os.getenv(var)]
