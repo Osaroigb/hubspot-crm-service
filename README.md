@@ -151,7 +151,7 @@ If you prefer **not** to use Docker:
 ---
 
 ## API Endpoints & Usage
-📌 Postman API Docs[https://documenter.getpostman.com/view/14515325/2sAYkGMKoE]
+📌 [Postman API Docs](https://documenter.getpostman.com/view/14515325/2sAYkGMKoE)
 
 Below is a **high-level** overview of the main endpoints. Full reference is in the code or docstrings.
 
