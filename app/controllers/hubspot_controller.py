@@ -81,3 +81,64 @@ def create_or_update_deals():
         message="Deals processed successfully.",
         data=formatted_results
     )
+
+
+@hubspot_bp.route('/tickets', methods=['POST'])
+def create_tickets():
+    """
+    Creates one or more new tickets, linking them to the specified contact and deals.
+    """
+    data = request.get_json()
+
+    if not data:
+        logging.error("No JSON payload provided")
+        raise BadRequestError("No JSON payload provided.")
+
+    contact_id = data.get("contactId")
+    deal_ids = data.get("dealIds", [])
+    tickets_data = data.get("tickets", [])
+
+    if not contact_id:
+        raise BadRequestError("contactId is required.")
+    if not isinstance(tickets_data, list) or len(tickets_data) == 0:
+        raise BadRequestError("At least one ticket object is required in 'tickets' array.")
+
+    results = hubspot_service.create_tickets(contact_id, deal_ids, tickets_data)
+    
+    # Format the response as a list of { "action": "created", "ticket": <hubspot_ticket_response> }
+    response_list = []
+
+    for (ticket, action) in results:
+        response_list.append({
+            "action": action,
+            "ticket": ticket
+        })
+
+    return build_success_response(
+        message="Tickets created successfully.",
+        data=response_list
+    )
+
+
+@hubspot_bp.route('/new-crm-objects', methods=['GET'])
+def get_new_crm_objects():
+    """
+    Retrieves newly created contacts, deals, and tickets since a given timestamp.
+    Optional query params:
+      - since (str, e.g., 2025-03-20T00:00:00Z)
+      - limit (int, default=10)
+      - after (str, for paging)
+    """
+    since = request.args.get("since")
+    limit = request.args.get("limit", default=10, type=int)
+    after = request.args.get("after", default=None, type=str)
+
+    if not since:
+        raise BadRequestError("Query parameter 'since' is required, e.g. ?since=YYYY-MM-DDT00:00:00Z")
+
+    result = hubspot_service.retrieve_new_crm_objects(since, limit, after)
+
+    return build_success_response(
+        message="Retrieved newly created CRM objects.",
+        data=result
+    )
