@@ -20,7 +20,8 @@ hubspot-crm-service/
 │   │
 │   ├── services/
 │   │   ├── __init__.py
-│   │   └── hubspot_service.py
+│   │   ├── hubspot_service.py
+│   │   └── oauth_manager.py
 │   │
 │   └── utils/
 │       ├── __init__.py
@@ -34,7 +35,6 @@ hubspot-crm-service/
 │   └── test_hubspot.py
 │
 ├── venv/
-│
 ├── .dockerignore
 ├── .env
 ├── .env.example
