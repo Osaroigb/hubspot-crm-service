@@ -1,7 +1,7 @@
 import time
 import logging
 import requests
-from app.utils.errors import BadRequestError, ServiceUnavailableError
+from app.utils.errors import BadRequestError, NotFoundError, ServiceUnavailableError
 
 class HubSpotAPI:
     def __init__(self, oauth_manager):
@@ -60,6 +60,14 @@ class HubSpotAPI:
                 time.sleep(wait_time)
                 wait_time *= 2
 
+            elif response.status_code == 404:
+                logging.error(f"Not found error 404: {response.text}")
+        
+                raise NotFoundError(
+                    message="Resource not found in HubSpot",
+                    verboseMessage=response.text
+                )
+
             elif 400 <= response.status_code < 500:
                 # Client error, possibly contact not found or validation error
                 logging.error(f"Client error {response.status_code}: {response.text}")
@@ -74,7 +82,6 @@ class HubSpotAPI:
                 # For 400-level errors, raise BadRequestError
                 raise BadRequestError(
                     message=hubspot_message
-                    # verboseMessage=error_json
                 )
             
             elif response.status_code >= 500:
