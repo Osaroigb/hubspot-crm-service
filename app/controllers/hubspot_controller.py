@@ -95,7 +95,6 @@ def create_tickets():
         raise BadRequestError("No JSON payload provided.")
 
     contact_id = data.get("contactId")
-    deal_ids = data.get("dealIds", [])
     tickets_data = data.get("tickets", [])
 
     if not contact_id:
@@ -103,9 +102,7 @@ def create_tickets():
     if not isinstance(tickets_data, list) or len(tickets_data) == 0:
         raise BadRequestError("At least one ticket object is required in 'tickets' array.")
 
-    results = hubspot_service.create_tickets(contact_id, deal_ids, tickets_data)
-    
-    # Format the response as a list of { "action": "created", "ticket": <hubspot_ticket_response> }
+    results = hubspot_service.create_tickets(contact_id, tickets_data)
     response_list = []
 
     for (ticket, action) in results:

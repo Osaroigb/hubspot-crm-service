@@ -310,7 +310,7 @@ class HubSpotService:
         logging.info(f"Associated deal {deal_id} with contact {contact_id}.")
 
 
-    def create_tickets(self, contact_id: str, deal_ids: list[str], tickets_data: list[dict]):
+    def create_tickets(self, contact_id: str, tickets_data: list[dict]):
         """
         Creates one or more new tickets in HubSpot, always new (never update).
         Associates each ticket with the specified contact and deals.
@@ -319,10 +319,7 @@ class HubSpotService:
         """
         # verify the contact exists (and not archived)
         self.assert_contact_exists(contact_id)
-
-        # verify each deal exists
-        for deal_id in deal_ids:
-            self.assert_deal_exists(deal_id)
+        associated_deals, deal_ids = self.fetch_associated_deals_for_contact(contact_id)
 
         results = []
 
@@ -338,7 +335,7 @@ class HubSpotService:
                     verboseMessage=err.messages
                 )
             
-            created_ticket = self.create_ticket(valid_ticket_data, contact_id, deal_ids)
+            created_ticket = self.create_ticket(valid_ticket_data)
             new_ticket_id = created_ticket.get("id")
 
             # Associate ticket with contact
@@ -353,7 +350,7 @@ class HubSpotService:
         return results
 
 
-    def create_ticket(self, ticket_data: dict, contact_id: str, deal_ids: list[str]):
+    def create_ticket(self, ticket_data: dict):
         """
         Creates a new ticket in HubSpot from the provided data.
         """
@@ -406,30 +403,6 @@ class HubSpotService:
         logging.info(f"Associated ticket {ticket_id} with deal {deal_id}.")
 
 
-    def assert_deal_exists(self, deal_id: str):
-        """
-        Searches HubSpot for a deal with the deal_id.
-        """
-        endpoint = f"{DEALS_ENDPOINT}/{deal_id}"
-
-        try:
-            response = self.hubspot_api.request(
-                method="GET",
-                endpoint=endpoint
-            )
-
-            # Access properties safely
-            deal_name = response.get("properties", {}).get("dealname", "Unknown Deal")
-            logging.info(f"Verified deal with name {deal_name} and ID {deal_id} exists.")
-
-        except Exception as e:
-            logging.error(f"Deal {deal_id} not found")
-            raise NotFoundError(
-                message="Deal not found.",
-                verboseMessage=f"Deal {deal_id} not found."
-            )
-
-
     def retrieve_new_crm_objects(self, created_after: str, limit: int = 10, after: str = None):
         """
         High-level method to retrieve newly created contacts, deals, tickets since 'created_after'.
@@ -446,7 +419,7 @@ class HubSpotService:
             contact_id = contact.get("id")
 
             if contact_id:
-                associated_deals = self.fetch_associated_deals_for_contact(contact_id)
+                associated_deals, associated_deal_ids = self.fetch_associated_deals_for_contact(contact_id)
                 contact["associatedDeals"] = associated_deals
 
         return {
@@ -550,8 +523,9 @@ class HubSpotService:
         associated_deal_ids = [item["id"] for item in assoc_response.get("results", [])]
 
         if not associated_deal_ids:
-            return []
+            return [], []
 
+        logging.info(f"associated_deal_ids {associated_deal_ids}")
         deals = []
 
         for deal_id in associated_deal_ids:
@@ -559,4 +533,4 @@ class HubSpotService:
             deal_response = self.hubspot_api.request("GET", deal_endpoint)
             deals.append(deal_response)
         
-        return deals
+        return deals, associated_deal_ids

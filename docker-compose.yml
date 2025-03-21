@@ -1,0 +1,12 @@
+version: '3.8'
+
+services:
+  hubspot_crm_service:
+    build: .
+    image: hubspot_crm_image:latest
+    container_name: hubspot_crm_api
+    restart: unless-stopped
+    ports:
+      - "8080:8080"
+    env_file:
+      - .env
