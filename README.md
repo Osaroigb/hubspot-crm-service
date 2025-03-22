@@ -8,14 +8,14 @@
 5. [Environment Variables](#environment-variables)
 6. [Docker Deployment](#docker-deployment)
 7. [Running the App (Non-Docker)](#running-the-app-non-docker)
-8. [API Endpoints & Usage](#api-endpoints--usage)
+8. [Swagger Documentation](#swagger-documentation)
+9. [API Endpoints & Usage](#api-endpoints--usage)
    - [Contact Endpoints](#contact-endpoints)
    - [Deal Endpoints](#deal-endpoints)
    - [Ticket Endpoints](#ticket-endpoints)
    - [Retrieve Newly Created Objects](#retrieve-newly-created-objects)
-9. [Authentication Details (HubSpot OAuth)](#authentication-details-hubspot-oauth)
-10. [Testing](#testing)
-11. [Swagger Documentation](#swagger-documentation)
+10. [Authentication Details (HubSpot OAuth)](#authentication-details-hubspot-oauth)
+11. [Testing](#testing)
 12. [Troubleshooting](#troubleshooting)
 13. [License](#license)
 
@@ -149,6 +149,17 @@ If you prefer **not** to use Docker:
    ```
    http://127.0.0.1:8080/api/v1
    ```
+
+---
+
+## Swagger Documentation
+
+The API comes with built-in **Swagger UI** documentation via **Flasgger**.
+
+- **Interactive UI**: [http://127.0.0.1:8080/api-docs/](http://127.0.0.1:8080/api-docs/)
+- **Raw JSON Spec**: [http://127.0.0.1:8080/api-docs/apispec.json](http://127.0.0.1:8080/api-docs/apispec.json)
+
+This UI allows you to explore, test, and view schema definitions for all available routes.
 
 ---
 
@@ -286,17 +297,6 @@ Tests are located in the `tests/` directory:
 - `tests/integration/`: Integration tests for endpoint logic
 
 These test cases include edge conditions, mocking of external APIs, and service interactions.
-
----
-
-## Swagger Documentation
-
-The API comes with built-in **Swagger UI** documentation via **Flasgger**.
-
-- **Interactive UI**: [http://127.0.0.1:8080/api-docs/](http://127.0.0.1:8080/api-docs/)
-- **Raw JSON Spec**: [http://127.0.0.1:8080/api-docs/apispec.json](http://127.0.0.1:8080/api-docs/apispec.json)
-
-This UI allows you to explore, test, and view schema definitions for all available routes.
 
 ---
 
