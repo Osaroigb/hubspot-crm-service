@@ -1,6 +1,5 @@
 import json
 import pytest
-from app import app
 from unittest.mock import patch
 
 TICKETS_URL = "/api/v1/hubspot/tickets"

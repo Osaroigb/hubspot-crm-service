@@ -40,6 +40,9 @@ app.register_blueprint(hubspot_bp, url_prefix=API_PREFIX + "/hubspot")
 # Error handler for undefined routes
 @app.errorhandler(404)
 def not_found(error):
+    if request.path.startswith('/flasgger_static'):
+        return "", 204
+    
     logging.error("Route not found")
     return build_error_response(message="Route not found", status=404)
 
