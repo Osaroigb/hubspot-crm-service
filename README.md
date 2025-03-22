@@ -97,7 +97,6 @@ All environment variables are defined in **`.env.example`**. Copy them into **`.
 - **`HUBSPOT_CLIENT_ID`**: Your HubSpot OAuth client ID  
 - **`HUBSPOT_CLIENT_SECRET`**: Your HubSpot OAuth client secret  
 - **`HUBSPOT_REFRESH_TOKEN`**: Your HubSpot OAuth refresh token  
-- **Any other** required variables (DB credentials, etc.)
 
 Ensure these are **not** committed to version control by checking your **`.gitignore`**.
 
@@ -115,7 +114,7 @@ docker-compose up --build
 This will:
 1. Build the **Flask** image from the **`Dockerfile`**.
 2. Start a container named **`hubspot_crm_api`** (or whichever name you specified in `docker-compose.yml`).
-3. Expose port **8080** (by default), so the API is accessible at `http://localhost:8080api/v1`.
+3. Expose port **8080** (by default), so the API is accessible at `http://localhost:8080/api/v1`.
 
 ### 2. Verify
 
@@ -164,7 +163,7 @@ This UI allows you to explore, test, and view schema definitions for all availab
 ---
 
 ## API Endpoints & Usage
-📌 [Postman API Docs](https://documenter.getpostman.com/view/14515325/2sAYkGMKoE)
+📌 [Postman API Docs](https://documenter.getpostman.com/view/14515325/2sAYkGMKoE) for a more detailed API documentatoin of all the endpoints including request and responses.
 
 Below is a **high-level** overview of the main endpoints. Full reference is in the code or docstrings.
 
@@ -247,6 +246,8 @@ Below is a **high-level** overview of the main endpoints. Full reference is in t
   - `since` (required): e.g. `2025-03-20T00:00:00Z`
   - `limit` (optional): default 10
   - `after` (optional): paging cursor from previous response.  
+
+  
   **Response**:
   ```json
   {
