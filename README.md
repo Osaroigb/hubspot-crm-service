@@ -92,7 +92,7 @@ All environment variables are defined in **`.env.example`**. Copy them into **`.
 
 - **`APP_HOST`**: The host (e.g. `0.0.0.0`)  
 - **`APP_PORT`**: The Flask port (e.g. `8080`)  
-- **`APP_NAME`**: A name for the application  
+- **`APP_NAME`**: A name for the application (e.g. `HubSpot CRM Service`)
 - **`APP_ENV`**: The environment (e.g. `development`, `production`)  
 - **`HUBSPOT_CLIENT_ID`**: Your HubSpot OAuth client ID  
 - **`HUBSPOT_CLIENT_SECRET`**: Your HubSpot OAuth client secret  
