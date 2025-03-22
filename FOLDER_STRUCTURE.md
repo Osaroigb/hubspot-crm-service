@@ -7,19 +7,15 @@ hubspot-crm-service/
 │   ├── routes.py
 │   │
 │   ├── controllers/
-│   │   ├── __init__.py
 │   │   └── hubspot_controller.py
 │   │
 │   ├── integrations/
-│   │   ├── __init__.py
 │   │   └── hubspot_api.py
 │   │
 │   ├── schemas/
-│   │   ├── __init__.py
 │   │   └── hubspot_schema.py
 │   │
 │   ├── services/
-│   │   ├── __init__.py
 │   │   ├── hubspot_service.py
 │   │   └── oauth_manager.py
 │   │
@@ -31,8 +27,17 @@ hubspot-crm-service/
 │       └── rate_limiting.py
 │
 ├── tests/
-│   ├── __init__.py
-│   └── test_hubspot.py
+│   ├── conftest.py
+│   ├── integration/
+│   │   ├── test_contact_endpoint.py
+│   │   ├── test_deals_endpoint.py
+│   │   ├── test_new_crm_endpoint.py
+│   │   └── test_tickets_endpoint.py
+│   │
+│   └── unit/
+│       ├── test_hubspot_service.py
+│       ├── test_oauth_manager.py
+│       └── test_rate_limiter.py
 │
 ├── venv/
 ├── .dockerignore
@@ -43,6 +48,7 @@ hubspot-crm-service/
 ├── Dockerfile
 ├── FOLDER_STRUCTURE.md
 ├── LICENSE
+├── pytest.ini
 ├── README.md
 ├── requirements.txt
 └── run.py

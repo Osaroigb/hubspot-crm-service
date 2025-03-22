@@ -14,8 +14,10 @@
    - [Ticket Endpoints](#ticket-endpoints)
    - [Retrieve Newly Created Objects](#retrieve-newly-created-objects)
 9. [Authentication Details (HubSpot OAuth)](#authentication-details-hubspot-oauth)
-10. [Troubleshooting](#troubleshooting)
-11. [License](#license)
+10. [Testing](#testing)
+11. [Swagger Documentation](#swagger-documentation)
+12. [Troubleshooting](#troubleshooting)
+13. [License](#license)
 
 ---
 
@@ -265,6 +267,36 @@ The app automatically **refreshes** the access token when expired. For details:
 3. If HubSpot returns **401**, the token is refreshed again.
 
 If these environment variables are missing or invalid, you’ll see errors like **`Invalid or expired HubSpot refresh token`** in logs or a 401.
+
+---
+
+## Testing
+
+### ✅ Unit & Integration Tests
+
+This project uses **pytest** to run both **unit tests** and **integration tests**.
+
+To run all tests:
+```bash
+pytest
+```
+
+Tests are located in the `tests/` directory:
+- `tests/unit/`: Unit tests for services and utilities
+- `tests/integration/`: Integration tests for endpoint logic
+
+These test cases include edge conditions, mocking of external APIs, and service interactions.
+
+---
+
+## Swagger Documentation
+
+The API comes with built-in **Swagger UI** documentation via **Flasgger**.
+
+- **Interactive UI**: [http://127.0.0.1:8080/api-docs/](http://127.0.0.1:8080/api-docs/)
+- **Raw JSON Spec**: [http://127.0.0.1:8080/api-docs/apispec.json](http://127.0.0.1:8080/api-docs/apispec.json)
+
+This UI allows you to explore, test, and view schema definitions for all available routes.
 
 ---
 
