@@ -6,4 +6,4 @@ app = Flask(__name__)
 cors = CORS(app)
 
 # Register Flask routes
-from . import routes
+from .routes import *

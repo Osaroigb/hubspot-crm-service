@@ -270,3 +270,80 @@ def test_create_tickets_contact_not_found(service):
             service.create_tickets(contact_id, tickets_data)
 
         assert "Contact not found" in str(exc_info.value)
+
+
+
+# ----------------- CRM TESTS ------------------ #
+
+def test_retrieve_new_crm_objects_success(service):
+    created_after = "2025-03-20T00:00:00Z"
+    contact_id = "contact-1"
+
+    fake_contacts = {
+        "results": [
+            {"id": contact_id, "properties": {"email": "user@example.com"}},
+        ],
+        "paging": {"next": {"after": "123"}}
+    }
+
+    fake_deals = {
+        "results": [
+            {"id": "deal-1", "properties": {"dealname": "Deal 1"}},
+        ],
+        "paging": None
+    }
+
+    fake_tickets = {
+        "results": [
+            {"id": "ticket-1", "properties": {"subject": "Test Ticket"}},
+        ],
+        "paging": None
+    }
+
+    associated_deals = ([
+        {"id": "deal-1", "properties": {"dealname": "Deal 1"}},
+    ], ["deal-1"])
+
+    with patch.object(service, 'search_new_contacts', return_value=fake_contacts), \
+         patch.object(service, 'search_new_deals', return_value=fake_deals), \
+         patch.object(service, 'search_new_tickets', return_value=fake_tickets), \
+         patch.object(service, 'fetch_associated_deals_for_contact', return_value=associated_deals):
+
+        result = service.retrieve_new_crm_objects(created_after)
+
+        assert len(result["contacts"]) == 1
+        assert result["contacts"][0]["id"] == contact_id
+        assert "associatedDeals" in result["contacts"][0]
+        assert result["deals"] == fake_deals["results"]
+        assert result["tickets"] == fake_tickets["results"]
+
+
+def test_retrieve_new_crm_objects_empty_results(service):
+    created_after = "2025-03-20T00:00:00Z"
+
+    with patch.object(service, 'search_new_contacts', return_value={"results": []}), \
+         patch.object(service, 'search_new_deals', return_value={"results": []}), \
+         patch.object(service, 'search_new_tickets', return_value={"results": []}):
+
+        result = service.retrieve_new_crm_objects(created_after)
+
+        assert result["contacts"] == []
+        assert result["deals"] == []
+        assert result["tickets"] == []
+
+
+def test_retrieve_new_crm_objects_handles_missing_contact_id(service):
+    created_after = "2025-03-20T00:00:00Z"
+    fake_contacts = {
+        "results": [
+            {"properties": {"email": "user@example.com"}},  # Missing ID
+        ],
+        "paging": None
+    }
+
+    with patch.object(service, 'search_new_contacts', return_value=fake_contacts), \
+         patch.object(service, 'search_new_deals', return_value={"results": []}), \
+         patch.object(service, 'search_new_tickets', return_value={"results": []}):
+
+        result = service.retrieve_new_crm_objects(created_after)
+        assert result["contacts"][0].get("associatedDeals") is None
