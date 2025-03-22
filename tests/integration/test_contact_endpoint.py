@@ -3,7 +3,6 @@ from unittest.mock import patch
 
 CONTACT_URL = "/api/v1/hubspot/contact"
 
-
 @patch("app.services.hubspot_service.HubSpotService.create_or_update_contact")
 def test_create_contact_success(mock_create_contact, client):
     payload = {
